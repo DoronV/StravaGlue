@@ -6,7 +6,7 @@ import (
 )
 
 type GpxFile struct {
-	GpxString []byte
+	GpxString string
 }
 
 func Read(filepath string) GpxFile {
@@ -16,8 +16,10 @@ func Read(filepath string) GpxFile {
 		fmt.Errorf("error reading the file, %v", err)
 	}
 
+	dataString := string(data)
+
 	gpxFile := GpxFile{
-		GpxString: data,
+		GpxString: dataString,
 	}
 
 	return gpxFile
