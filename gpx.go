@@ -3,24 +3,33 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"strings"
 )
 
-type GpxFile struct {
-	GpxString string
-}
-
-func Read(filepath string) GpxFile {
+func Read(filepath string) string {
 	data, err := ioutil.ReadFile(filepath)
 
 	if err != nil {
 		fmt.Errorf("error reading the file, %v", err)
 	}
 
-	dataString := string(data)
+	GpxString := string(data)
 
-	gpxFile := GpxFile{
-		GpxString: dataString,
-	}
+	return GpxString
+}
 
-	return gpxFile
+func PreparePrimaryFile(gpxString string) string {
+	suffix := "    </trkseg>\n  </trk>\n</gpx>"
+
+	preparedString := strings.TrimSuffix(gpxString, suffix)
+
+	return preparedString
+}
+
+func PrepareSecondaryFile(gpxString string) string {
+	firstElement := "    <name>Fietsen</name>\n"
+
+	preparedString := strings.Trim(gpxString, firstElement)
+
+	return preparedString
 }
