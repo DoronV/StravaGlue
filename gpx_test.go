@@ -54,3 +54,51 @@ func TestPrepareFiles(t *testing.T) {
 		}
 	})
 }
+
+func TestCombineFiles(t *testing.T) {
+	t.Run("can combine two files into one string", func(t *testing.T) {
+		primaryGpxFilePath := "test_files/Early.gpx"
+		secondaryGpxFilePath := "test_files/Later.gpx"
+
+		primaryGpxString := Read(primaryGpxFilePath)
+		secondaryGpxString := Read(secondaryGpxFilePath)
+
+		primaryGpxString = PreparePrimaryFile(primaryGpxString)
+		secondaryGpxString = PrepareSecondaryFile(secondaryGpxString)
+
+		got := CombineGpxStrings(primaryGpxString, secondaryGpxString)
+
+		wantStart := "<?xml version='1.0' encoding='UTF-8'?>"
+		wantFinish := "</gpx>"
+
+		if !strings.Contains(got, wantStart) {
+			t.Errorf("got %s, want %s", got, wantStart)
+		}
+
+		if !strings.Contains(got, wantFinish) {
+			t.Errorf("got %s, want %s", got, wantFinish)
+		}
+	})
+
+	t.Run("can output new gpx file", func(t *testing.T) {
+		primaryGpxFilePath := "test_files/Early.gpx"
+		secondaryGpxFilePath := "test_files/Later.gpx"
+
+		primaryGpxString := Read(primaryGpxFilePath)
+		secondaryGpxString := Read(secondaryGpxFilePath)
+
+		primaryGpxString = PreparePrimaryFile(primaryGpxString)
+		secondaryGpxString = PrepareSecondaryFile(secondaryGpxString)
+
+		finalGpxString := CombineGpxStrings(primaryGpxString, secondaryGpxString)
+
+		CreateGpxFile(finalGpxString, "test_files/test_output.gpx")
+
+		got := Read("test_files/test_output.gpx")
+		want := Read("test_files/reference_file.gpx")
+
+		if got != want {
+			t.Errorf("got %s, want %s", got, want)
+		}
+	})
+}

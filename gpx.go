@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"regexp"
 	"strings"
 )
 
@@ -27,9 +28,21 @@ func PreparePrimaryFile(gpxString string) string {
 }
 
 func PrepareSecondaryFile(gpxString string) string {
-	firstElement := "    <name>Fietsen</name>\n"
+	reg := regexp.MustCompile("(.*\n)+.*<trk>\n.*</name>\n.*<trkseg>\n")
 
-	preparedString := strings.Trim(gpxString, firstElement)
+	preparedString := reg.ReplaceAllString(gpxString, "")
 
 	return preparedString
+}
+
+func CombineGpxStrings(primary, secondary string) string {
+	return primary + secondary
+}
+
+func CreateGpxFile(gpxString string, path string) {
+	err := ioutil.WriteFile(path, []byte(gpxString), 0644)
+
+	if err != nil {
+		fmt.Printf("Shit got fucked %v", err)
+	}
 }
