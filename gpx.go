@@ -11,7 +11,7 @@ func Read(filepath string) string {
 	data, err := ioutil.ReadFile(filepath)
 
 	if err != nil {
-		fmt.Errorf("error reading the file, %v", err)
+		fmt.Printf("error reading the file, %v", err)
 	}
 
 	GpxString := string(data)

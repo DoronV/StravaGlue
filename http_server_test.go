@@ -2,21 +2,25 @@ package main
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
 func TestServerReplies(t *testing.T) {
 	t.Run("Server responds to GET", func(t *testing.T) {
-		HttpServer()
-		request, err := http.NewRequest(http.MethodGet, "localhost:3000", nil)
+		_, err := http.NewRequest(http.MethodGet, "localhost:3000/", nil)
+		response := httptest.NewRecorder()
 
 		if err != nil {
-			t.Errorf("Shit's fucked %v", err)
+			t.Errorf("Shit broke: %v", err)
 		}
 
-		got := request.Body
+		got := response.Body.String()
+		want := "200"
 
-		print(got)
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
 
 	})
 }

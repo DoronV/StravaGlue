@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -11,4 +10,3 @@ func HttpServer() {
 
 	log.Fatal(http.ListenAndServe(":3000", nil))
 }
-
